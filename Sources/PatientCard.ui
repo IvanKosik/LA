@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PatientCard</class>
+ <widget class="QDialog" name="PatientCard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>502</width>
+    <height>363</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Patient Card</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QGroupBox" name="personalDataGroupBox">
+       <property name="title">
+        <string>&amp;Personal Data</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QFormLayout" name="formLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="lastNameLabel">
+            <property name="text">
+             <string>&amp;Last Name:</string>
+            </property>
+            <property name="buddy">
+             <cstring>lastNameLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="lastNameLineEdit"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="firstNameLabel">
+            <property name="text">
+             <string>First &amp;Name:</string>
+            </property>
+            <property name="buddy">
+             <cstring>firstNameLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="firstNameLineEdit"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="middleNameLabel">
+            <property name="text">
+             <string>Middle Name:</string>
+            </property>
+            <property name="buddy">
+             <cstring>middleNameLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="middleNameLineEdit"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="birthDateLabel">
+            <property name="text">
+             <string>&amp;Birth Date:</string>
+            </property>
+            <property name="buddy">
+             <cstring>birthDateEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QDateEdit" name="birthDateEdit"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="sexLabel">
+            <property name="text">
+             <string>Sex:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="maleRadioButton">
+            <property name="text">
+             <string>&amp;Male</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="femaleRadioButton">
+            <property name="text">
+             <string>&amp;Female</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QGroupBox" name="passportGroupBox">
+       <property name="title">
+        <string>Passpo&amp;rt</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="passportSeriesLabel">
+            <property name="text">
+             <string>S&amp;eries:</string>
+            </property>
+            <property name="buddy">
+             <cstring>passportSeriesLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="passportSeriesLineEdit"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="passportNumberLabel">
+            <property name="text">
+             <string>N&amp;umber:</string>
+            </property>
+            <property name="buddy">
+             <cstring>passportNumberLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="passportNumberLineEdit"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QFormLayout" name="formLayout_3">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="passportIssueDateLabel">
+            <property name="text">
+             <string>&amp;Issue Date:</string>
+            </property>
+            <property name="buddy">
+             <cstring>passportIssueDateEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="passportIssuingAuthorityLineEdit"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="passportPersonalNumberLabel">
+            <property name="text">
+             <string>Per&amp;sonal Number:</string>
+            </property>
+            <property name="buddy">
+             <cstring>passportPersonalNumberLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="passportPersonalNumberLineEdit"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDateEdit" name="passportIssueDateEdit"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="passportIssuingAuthorityLabel">
+            <property name="text">
+             <string>Issuin&amp;g Authority:</string>
+            </property>
+            <property name="buddy">
+             <cstring>passportIssuingAuthorityLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QGroupBox" name="addressesAndPhonesGroupBox">
+       <property name="title">
+        <string>A&amp;ddresses and Phones</string>
+       </property>
+       <layout class="QFormLayout" name="formLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="addressesLabel">
+          <property name="text">
+           <string>&amp;Addresses:</string>
+          </property>
+          <property name="buddy">
+           <cstring>addressesLineEdit</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="addressesLineEdit"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="phonesLabel">
+          <property name="text">
+           <string>P&amp;hones:</string>
+          </property>
+          <property name="buddy">
+           <cstring>phonesLineEdit</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="phonesLineEdit"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="jobLabel">
+          <property name="text">
+           <string>&amp;Job:</string>
+          </property>
+          <property name="buddy">
+           <cstring>jobLineEdit</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="jobLineEdit"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="postLabel">
+          <property name="text">
+           <string>P&amp;ost:</string>
+          </property>
+          <property name="buddy">
+           <cstring>postLineEdit</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="postLineEdit"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QGroupBox" name="additionalInformationGroupBox">
+       <property name="title">
+        <string>Addi&amp;tional Information</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QTextEdit" name="additionalInformationTextEdit"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="cardNumberLabel">
+     <property name="text">
+      <string>Card number: </string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="dialogButtonBox">
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="locale">
+      <locale language="Russian" country="RussianFederation"/>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+ <slots>
+  <signal>testSignal(int)</signal>
+  <slot>testSlot(int)</slot>
+ </slots>
+</ui>
