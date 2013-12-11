@@ -58,7 +58,7 @@ void MainWindow::adjustTables()
                  << QCoreApplication::translate("ColumnNames", ReadableExpertise::Prognosis);
     ui->expertiseTableWidget->setHorizontalHeaderLabels(headerLabels);
     ui->expertiseTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    // � астягиваем колонки на всю ширину. Плохо то, что после этого пользователю
+    // Растягиваем колонки на всю ширину. Плохо то, что после этого пользователю
     // нельзя самому менять размер конкретной колонки.
     ui->expertiseTableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 

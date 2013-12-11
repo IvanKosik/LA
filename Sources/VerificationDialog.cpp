@@ -48,7 +48,7 @@ VerificationDialog::VerificationDialog(quint64 patientId, QWidget *parent)
     SqlQuery query;
     query.exec("SELECT ID, Name FROM Parameter");
 
-    // � азъединяем сигнал со слотом на время заполнения таблицы:
+    // Разъединяем сигнал со слотом на время заполнения таблицы:
     disconnect(ui->verificationParameterTableWidget, SIGNAL(itemChanged(QTableWidgetItem*)),
                this, SLOT(on_verificationParameterTableWidget_itemChanged(QTableWidgetItem*)));
 
@@ -59,7 +59,7 @@ VerificationDialog::VerificationDialog(quint64 patientId, QWidget *parent)
                  << QCoreApplication::translate("ColumnNames", ReadableVerificationParameter::Description);
     ui->verificationParameterTableWidget->setHorizontalHeaderLabels(headerLabels);
     //-ui->verificationParameterTableWidget->setItemDelegateForColumn(0, new NoEditItemDelegate);
-    // � астягиваем колонки на всю ширину. Плохо то, что после этого пользователю
+    // Растягиваем колонки на всю ширину. Плохо то, что после этого пользователю
     // нельзя самому менять размер конкретной колонки.
     ui->verificationParameterTableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch); //-
 
@@ -103,7 +103,7 @@ VerificationDialog::VerificationDialog(quint64 patientId, QWidget *parent)
                  << QCoreApplication::translate("ColumnNames", ReadableDiagnosis::Probability);
     ui->diagnosisTableWidget->setHorizontalHeaderLabels(headerLabels);
     ui->diagnosisTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    // � астягиваем колонки на всю ширину. Плохо то, что после этого пользователю
+    // Растягиваем колонки на всю ширину. Плохо то, что после этого пользователю
     // нельзя самому менять размер конкретной колонки.
     ui->diagnosisTableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch); //-
 
@@ -114,7 +114,7 @@ VerificationDialog::VerificationDialog(quint64 patientId, QWidget *parent)
                  << QCoreApplication::translate("ColumnNames", ReadableUnknownParameter::ResearchName);
     ui->unknownParameterTableWidget->setHorizontalHeaderLabels(headerLabels);
     ui->unknownParameterTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    // � астягиваем колонки на всю ширину. Плохо то, что после этого пользователю
+    // Растягиваем колонки на всю ширину. Плохо то, что после этого пользователю
     // нельзя самому менять размер конкретной колонки.
     ui->unknownParameterTableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch); //-
 
@@ -333,9 +333,17 @@ qreal VerificationDialog::calculateAverageDiagnosisProbability(quint64 diagnosis
     qreal averageDiagnosisProbability = 0; // Средняя вероятность по всем фазам диагноза.
     // Находим среднюю вероятность каждой фазы диагноза:
     while (phaseIdQuery.next()) {
+        // Расчет без учета весовых коэффициентов параметров:
+        /*
         qreal averagePhaseProbability
                 = calculateAveragePhaseProbability(phaseIdQuery.value(0).toULongLong());
         averageDiagnosisProbability += averagePhaseProbability / phaseIdQuery.size();
+        */
+
+        // Расчет с учетом весовых коэффициентов параметров:
+        qreal averageWeightPhaseProbability
+                = calculateAverageWeightPhaseProbability(phaseIdQuery.value(0).toULongLong());
+        averageDiagnosisProbability += averageWeightPhaseProbability / phaseIdQuery.size();
     }
 
     return averageDiagnosisProbability;
@@ -358,6 +366,31 @@ qreal VerificationDialog::calculateAveragePhaseProbability(quint64 phaseId)
     }
 
     return averagePhaseProbability;
+}
+//------------------------------------------------------------------------------
+qreal VerificationDialog::calculateAverageWeightPhaseProbability(quint64 phaseId)
+{
+    // Находим пары: идентификатор параметра фазы, идентификатор параметра:
+    SqlQuery phaseParameterIdQuery;
+    phaseParameterIdQuery.prepare("SELECT ID, ParameterID FROM PhaseParameter WHERE PhaseID=?");
+    phaseParameterIdQuery.addBindValue(phaseId);
+    phaseParameterIdQuery.exec();
+    qreal weightPhaseProbabilitySum = 0; // Сумма всех вероятностей параметров фазы с учетом весов.
+    // Находим вероятности параметров, указанные пользователем:
+    double weightSum = 0; // Сумма весов всех параметров.
+    while (phaseParameterIdQuery.next()) {
+        qreal phaseParameterProbability
+                = getPhaseParameterProbability(phaseParameterIdQuery.value(0).toULongLong(),
+                                               phaseParameterIdQuery.value(1).toULongLong());
+        // Вес текущего параметра стадии:
+        double weight = DB::getPhaseParameterWeight(phaseParameterIdQuery.value(0).toULongLong());
+        weightSum += weight;
+        weightPhaseProbabilitySum += phaseParameterProbability * weight;
+    }
+
+    // Средняя вероятность по всем параметрам фазы с учетом весов.
+    qreal averageWeightPhaseProbability = weightPhaseProbabilitySum / weightSum;
+    return averageWeightPhaseProbability;
 }
 //------------------------------------------------------------------------------
 qreal VerificationDialog::getPhaseParameterProbability(quint64 phaseParameterId,

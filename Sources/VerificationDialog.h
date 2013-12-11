@@ -75,7 +75,10 @@ private:
      */
     void updateDiagnosisProbabilities(QList<quint64> &diagnosisIds);
     qreal calculateAverageDiagnosisProbability(quint64 diagnosisId);
+    //! Calculates average phase probability, doesn't take into account parameter weights.
     qreal calculateAveragePhaseProbability(quint64 phaseId);
+    //! Calculates average phase probability, takes into account parameter weights.
+    qreal calculateAverageWeightPhaseProbability(quint64 phaseId);
     qreal getPhaseParameterProbability(quint64 phaseParameterId, quint64 parameterId);
     void addNecessaryResearches(quint64 parameterId);
     bool saveUnknownDiagnosisParameters(QSet<quint64> unknownDiagnosisParameters,

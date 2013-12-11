@@ -50,6 +50,7 @@ public:
     static QSet<QPair<QDateTime, Id> > getPatientVerifications(Id patientId);
     static QSet<QPair<QDateTime, Id> > getPatientPrognoses(Id patientId);
     static QString getVerificationConclusion(Id expertiseId);
+    static double getPhaseParameterWeight(Id phaseParameterId);
 
 private:
     DB();

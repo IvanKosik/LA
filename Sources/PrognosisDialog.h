@@ -60,7 +60,10 @@ private:
      \param phaseIds Идентификаторы фаз
      */
     void updatePhaseProbabilities(IdList &phaseIds);
+    //! Calculates average phase probability, doesn't take into account parameter weights.
     qreal calculateAveragePhaseProbability(Id phaseId);
+    //! Calculates average phase probability, takes into account parameter weights.
+    qreal calculateAverageWeightPhaseProbability(Id phaseId);
     qreal getPhaseParameterProbability(Id phaseParameterId, Id parameterId);
     void addNecessaryResearches(Id unknownParameterId);
     bool saveUnknownPhaseParameters(IdSet unknownPhaseParameters,

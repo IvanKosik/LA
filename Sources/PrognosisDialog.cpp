@@ -52,7 +52,7 @@ PrognosisDialog::PrognosisDialog(quint64 patientId, QWidget *parent)
                  << QCoreApplication::translate("ColumnNames", ReadableParameterValue::Value);
     ui->parameterValueTableWidget->setHorizontalHeaderLabels(headerLabels);
     //-ui->parameterValueTableWidget->setItemDelegateForColumn(0, new NoEditItemDelegate);
-    // � астягиваем колонки на всю ширину. Плохо то, что после этого пользователю
+    // Растягиваем колонки на всю ширину. Плохо то, что после этого пользователю
     // нельзя самому менять размер конкретной колонки.
     ui->parameterValueTableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch); //-
 
@@ -63,7 +63,7 @@ PrognosisDialog::PrognosisDialog(quint64 patientId, QWidget *parent)
                  << QCoreApplication::translate("ColumnNames", ReadablePhase::Probability);
     ui->phaseTableWidget->setHorizontalHeaderLabels(headerLabels);
     ui->phaseTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    // � астягиваем колонки на всю ширину. Плохо то, что после этого пользователю
+    // Растягиваем колонки на всю ширину. Плохо то, что после этого пользователю
     // нельзя самому менять размер конкретной колонки.
     ui->phaseTableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch); //-
 
@@ -74,7 +74,7 @@ PrognosisDialog::PrognosisDialog(quint64 patientId, QWidget *parent)
                  << QCoreApplication::translate("ColumnNames", ReadableUnknownParameter2::ResearchName);
     ui->unknownParameterTableWidget->setHorizontalHeaderLabels(headerLabels);
     ui->unknownParameterTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    // � астягиваем колонки на всю ширину. Плохо то, что после этого пользователю
+    // Растягиваем колонки на всю ширину. Плохо то, что после этого пользователю
     // нельзя самому менять размер конкретной колонки.
     ui->unknownParameterTableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch); //-
 
@@ -254,14 +254,20 @@ void PrognosisDialog::updatePhaseProbabilities(IdList &phaseIds)
     foreach (Id phaseId, phaseIds) {
         mUnknownParameters.clear();
 
+        // Средняя вероятность фазы без учета весов параметров:
+        /*
         qreal averagePhaseProbability
                 = calculateAveragePhaseProbability(phaseId);
+        */
+        // Средняя вероятность фазы с учетом весов параметров:
+        qreal averageWeightPhaseProbability
+                = calculateAverageWeightPhaseProbability(phaseId);
 
         qDebug() << "phaseId: " << phaseId
-                 << "\nProbability: " << averagePhaseProbability;//-
+                 << "\nProbability: " << averageWeightPhaseProbability;//-
 
         // В таблицу заносим только те фазы, вероятность которых не равна 0:
-        if (averagePhaseProbability != 0) {
+        if (averageWeightPhaseProbability != 0) {
             // Добавляем один ряд к таблице:
             qint32 rowCount = ui->phaseTableWidget->rowCount();
             ui->phaseTableWidget->setRowCount(rowCount + 1);
@@ -269,7 +275,7 @@ void PrognosisDialog::updatePhaseProbabilities(IdList &phaseIds)
             QString phaseName = DB::getPhaseName(phaseId);
             QTableWidgetItem *nameItem = new QTableWidgetItem(phaseName);
 
-            QString phaseProbability = QString::number(averagePhaseProbability * 100, 'f', 2);
+            QString phaseProbability = QString::number(averageWeightPhaseProbability * 100, 'f', 2);
             QTableWidgetItem *probabilityItem = new QTableWidgetItem(phaseProbability);
 
             ui->phaseTableWidget->setItem(rowCount, 0, nameItem);
@@ -303,6 +309,31 @@ qreal PrognosisDialog::calculateAveragePhaseProbability(Id phaseId)
     }
 
     return averagePhaseProbability;
+}
+//------------------------------------------------------------------------------
+qreal PrognosisDialog::calculateAverageWeightPhaseProbability(Id phaseId)
+{
+    // Находим пары: идентификатор параметра фазы, идентификатор параметра:
+    SqlQuery phaseParameterIdQuery;
+    phaseParameterIdQuery.prepare("SELECT ID, ParameterID FROM PhaseParameter WHERE PhaseID=?");
+    phaseParameterIdQuery.addBindValue(phaseId);
+    phaseParameterIdQuery.exec();
+    qreal weightPhaseProbabilitySum = 0; // Сумма всех вероятностей параметров фазы с учетом весов.
+    // Находим вероятности параметров, указанные пользователем:
+    double weightSum = 0; // Сумма весов всех параметров.
+    while (phaseParameterIdQuery.next()) {
+        qreal phaseParameterProbability
+                = getPhaseParameterProbability(phaseParameterIdQuery.value(0).toULongLong(),
+                                               phaseParameterIdQuery.value(1).toULongLong());
+        // Вес текущего параметра стадии:
+        double weight = DB::getPhaseParameterWeight(phaseParameterIdQuery.value(0).toULongLong());
+        weightSum += weight;
+        weightPhaseProbabilitySum += phaseParameterProbability * weight;
+    }
+
+    // Средняя вероятность по всем параметрам фазы с учетом весов.
+    qreal averageWeightPhaseProbability = weightPhaseProbabilitySum / weightSum;
+    return averageWeightPhaseProbability;
 }
 //------------------------------------------------------------------------------
 qreal PrognosisDialog::getPhaseParameterProbability(Id phaseParameterId,
@@ -422,7 +453,7 @@ void PrognosisDialog::on_diagnosisLineEdit_textChanged(const QString &arg1)
                 = DB::getDiagnosisParameters(diagnosisId);
 
 
-        // � азъединяем сигнал со слотом на время заполнения таблицы:
+        // Разъединяем сигнал со слотом на время заполнения таблицы:
         disconnect(ui->parameterValueTableWidget, SIGNAL(itemChanged(QTableWidgetItem*)),
                    this, SLOT(on_parameterValueTableWidget_itemChanged(QTableWidgetItem*)));
 
@@ -458,7 +489,7 @@ void PrognosisDialog::on_diagnosisComboBox_currentIndexChanged(int index)
     QSet<QPair<quint64, QString> > diagnosisParameters
             = DB::getDiagnosisParameters(mDiagnosisId);
 
-    // � азъединяем сигнал со слотом на время заполнения таблицы:
+    // Разъединяем сигнал со слотом на время заполнения таблицы:
     disconnect(ui->parameterValueTableWidget, SIGNAL(itemChanged(QTableWidgetItem*)),
                this, SLOT(on_parameterValueTableWidget_itemChanged(QTableWidgetItem*)));
 

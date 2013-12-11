@@ -338,6 +338,17 @@ QString DB::getVerificationConclusion(Id expertiseId)
     return query.value(0).toString();
 }
 //------------------------------------------------------------------------------
+double DB::getPhaseParameterWeight(Id phaseParameterId)
+{
+    SqlQuery query;
+    query.prepare("SELECT Weight FROM PhaseParameter WHERE ID = :id");
+    query.bindValue(":id", phaseParameterId);
+    query.exec();
+    query.first();
+
+    return query.value(0).toDouble();
+}
+//------------------------------------------------------------------------------
 DB::DB()
 {
 }
