@@ -389,7 +389,10 @@ qreal VerificationDialog::calculateAverageWeightPhaseProbability(quint64 phaseId
     }
 
     // Средняя вероятность по всем параметрам фазы с учетом весов.
-    qreal averageWeightPhaseProbability = weightPhaseProbabilitySum / weightSum;
+    qreal averageWeightPhaseProbability = 0;
+    if (weightSum != 0) {
+        averageWeightPhaseProbability = weightPhaseProbabilitySum / weightSum;
+    }
     return averageWeightPhaseProbability;
 }
 //------------------------------------------------------------------------------
